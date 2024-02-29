@@ -19,6 +19,10 @@ function Pagination({ postPerPage, totalPosts, paginate }) {
     paginate(n);
     setActive(n);
   }
+  const nextPage = (n) => {
+    paginate(n);
+    setActive(n);
+  }
   return (
     <Nav>
       <ButtonUl>
@@ -44,6 +48,7 @@ function Pagination({ postPerPage, totalPosts, paginate }) {
             width='50px'
             title={<img src={next} alt='다음'/>}
             theme='light'
+
           />
         </li>
       </ButtonUl>

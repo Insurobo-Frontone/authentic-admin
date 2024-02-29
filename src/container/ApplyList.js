@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Title from "../components/Title";
 import SelectInput from "../components/Input/SelectInput";
@@ -9,27 +9,34 @@ import Table from "../components/Table";
 import Pagination from "../components/Pagination";
 import { useFormContext } from "react-hook-form";
 import { addDays, addMonths } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { getAllList, getKeywordList, getList } from "../api/ApplyListAPI";
 
-const ApplyList = ({ data, onClick }) => {
-  const { setValue } = useFormContext();
+
+const ApplyList = ({ data }) => {
+  const { setValue, watch } = useFormContext();
   const [postsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  // const [data, setData] = useState();
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
   const currentPosts = data?.slice(indexOfFirst, indexOfLast);
-  const [filterData, setFilterData] = useState(currentPosts);
+  const navigate = useNavigate();
   const keyword = [
     {
       id: '1',
-      name: '가입자명'
+      name: '가입자명',
+      value: 'PTYKORNM'
     },
     {
       id: '2',
-      name: '상호명'
+      name: '상호명',
+      value: 'PTYBIZNM'
     },
     {
       id: '3',
-      name: '연락처'
+      name: '연락처',
+      value: 'TELNO'
     },
   ];
   const state = [
@@ -42,6 +49,11 @@ const ApplyList = ({ data, onClick }) => {
       name: '완료'
     },
   ];
+
+  useEffect(()  => {
+    // getList().then((res) => console.log(res))
+  }, []);
+  
 
   const setDateRange = (period) => {
     const start = new Date();
@@ -67,8 +79,10 @@ const ApplyList = ({ data, onClick }) => {
     } 
   }
 
+
   const searchKeyword = () => {
-    setFilterData()
+    
+
   }
   return (
     <Wrap>
@@ -84,7 +98,7 @@ const ApplyList = ({ data, onClick }) => {
             >
               <>
                 {keyword.map((dt) => (
-                  <option key={dt.id}>{dt.name}</option>
+                  <option key={dt.id} value={dt.value}>{dt.name}</option>
                 ))}
               </>
             </SelectInput>
@@ -96,7 +110,7 @@ const ApplyList = ({ data, onClick }) => {
             >
               <>
                 {state.map((dt) => (
-                  <option key={dt.id}>{dt.name}</option>
+                  <option key={dt.id} value={dt.value}>{dt.name}</option>
                 ))}
               </>
             </SelectInput>
@@ -168,15 +182,15 @@ const ApplyList = ({ data, onClick }) => {
           </thead>
           <tbody>
             <>
-              {filterData.map((dt) => (
-                <tr>
+              {currentPosts.map((dt) => (
+                <tr onClick={() => navigate(`?id=${dt.id}`)}> 
                   <td>{dt.number}</td>
-                  <td onClick={onClick}>{dt.name}</td>
-                  <td>{dt.bizName}</td>
+                  <td>{dt.name}</td>
+                  <td style={{ textAlign: 'start' }}>{dt.bizName}</td>
                   <td>{dt.applyDate}</td>
                   <td>{dt.bizNo}</td>
                   <td>{dt.telNo}</td>
-                  <td>{dt.state}</td>
+                  <td style={{ color: dt.state === '완료' && '#5DA3FF'}}>{dt.state}</td>
                 </tr>
               ))}
             </>
@@ -185,7 +199,8 @@ const ApplyList = ({ data, onClick }) => {
         <Pagination
           postPerPage={postsPerPage} 
           totalPosts={data.length} 
-          paginate={setCurrentPage} 
+          paginate={setCurrentPage}
+          nextPage={setCurrentPage}
         />
       </ListWrap>
     </Wrap>

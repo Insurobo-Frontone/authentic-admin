@@ -34,7 +34,7 @@ const Wrap = styled.table`
     border: 1px solid #EAECEF;
   }
   td {
-    text-align: start;
+    text-align: center;
     vertical-align: middle;
     height: 36px;
     font-weight: 200;

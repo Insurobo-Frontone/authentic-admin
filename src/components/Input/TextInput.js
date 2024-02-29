@@ -38,6 +38,7 @@ const TextBasic = styled.input`
   border-radius: 4px;
   font-weight: 300;
   position: relative;
+  padding: 8px 12px;
   ::placeholder {
     color: #D0D0D0;
   }

@@ -7,7 +7,7 @@ export const listData = [
     applyDate: '2024-01-29',
     bizNo: '3732211321',
     telNo: '01056782707',
-    state: '접수'
+    state: '완료'
   },
   {
     id: '2',
