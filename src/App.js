@@ -13,7 +13,7 @@ function App() {
       <GlobalStyle />
       <Router>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/admin' element={<Home />} />
         </Routes>
       </Router>
     </FormProvider>
