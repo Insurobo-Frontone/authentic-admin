@@ -48,7 +48,6 @@ function Pagination({ postPerPage, totalPosts, paginate }) {
             width='50px'
             title={<img src={next} alt='다음'/>}
             theme='light'
-
           />
         </li>
       </ButtonUl>

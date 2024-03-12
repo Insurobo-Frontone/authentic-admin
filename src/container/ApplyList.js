@@ -10,7 +10,7 @@ import Pagination from "../components/Pagination";
 import { useFormContext } from "react-hook-form";
 import { addDays, addMonths } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { getAllList, getKeywordList, getList } from "../api/ApplyListAPI";
+import { getList } from "../api/ApplyAPI";
 
 
 const ApplyList = ({ data }) => {
@@ -39,19 +39,10 @@ const ApplyList = ({ data }) => {
       value: 'TELNO'
     },
   ];
-  const state = [
-    {
-      id: '1',
-      name: '접수'
-    },
-    {
-      id: '2',
-      name: '완료'
-    },
-  ];
+
 
   useEffect(()  => {
-    // getList().then((res) => console.log(res))
+    getList().then((res) => console.log(res))
   }, []);
   
 
@@ -103,17 +94,6 @@ const ApplyList = ({ data }) => {
               </>
             </SelectInput>
             <TextInput name='search' width='482px' />
-            <SelectInput
-              name='state'
-              placeholder='접수상태'
-              width='129px'
-            >
-              <>
-                {state.map((dt) => (
-                  <option key={dt.id} value={dt.value}>{dt.name}</option>
-                ))}
-              </>
-            </SelectInput>
             <Button 
               title='검색'
               width='67px'
@@ -173,11 +153,10 @@ const ApplyList = ({ data }) => {
             <tr>
               <th style={{ width: '47px'}}>No</th>
               <th style={{ width: '102px'}}>가입자명</th>
-              <th style={{ width: '223px'}}>상호명</th>
+              <th style={{ width: '325px'}}>상호명</th>
               <th style={{ width: '173px'}}>가입신청일</th>
               <th style={{ width: '190px'}}>사업자번호</th>
               <th style={{ width: '190px'}}>연락처</th>
-              <th style={{ width: '101px'}}>접수상태</th>
             </tr>
           </thead>
           <tbody>
@@ -190,7 +169,6 @@ const ApplyList = ({ data }) => {
                   <td>{dt.applyDate}</td>
                   <td>{dt.bizNo}</td>
                   <td>{dt.telNo}</td>
-                  <td style={{ color: dt.state === '완료' && '#5DA3FF'}}>{dt.state}</td>
                 </tr>
               ))}
             </>
@@ -228,7 +206,10 @@ const SearchRange = styled.div`
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      > :nth-child(2) {
+        margin: 0 10px 0 16px;
+
+      }
       > div {
         display: flex;
         align-items: center;
