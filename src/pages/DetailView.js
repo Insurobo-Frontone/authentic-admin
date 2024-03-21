@@ -7,12 +7,11 @@ import { getDetail } from "../api/ApplyAPI";
 const DetailView = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const uuid = searchParams.get('id');
 
   useEffect(() => {
     getDetail({
-      UUID: uuid,
-      MEMBER_NO: location.state.MEMBER_NO,
+      UUID: location.state.UUID,
+      MEMBER_NO: location.state.memberNo,
       QUOTE_NO: location.state.QUOTE_NO
     }).then((res) => {
       console.log(res)
