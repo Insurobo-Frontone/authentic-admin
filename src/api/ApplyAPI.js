@@ -1,7 +1,10 @@
 import axios from "axios";
 
 export const ApplyListAPI = axios.create({
-  baseURL: 'http://210.179.175.158'
+  baseURL: 'http://210.179.175.158',
+  headers: {
+    "Content-Type": "application/json",
+  }
 });
 
 export const getList = async (params) => {

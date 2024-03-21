@@ -40,9 +40,12 @@ const ApplyList = ({ data }) => {
     },
   ];
 
-
   useEffect(()  => {
-    getList().then((res) => console.log(res))
+    getList().then((res) => {
+      console.log(res)
+    }).catch((e) => {
+      console.log(e)
+    })
   }, []);
   
 
