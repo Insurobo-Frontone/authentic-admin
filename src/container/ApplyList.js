@@ -13,14 +13,16 @@ import { useNavigate } from "react-router-dom";
 import { getList } from "../api/ApplyAPI";
 
 
-const ApplyList = ({ data }) => {
+const ApplyList = () => {
   const { setValue, watch } = useFormContext();
+  const [data, setData] = useState();
   const [postsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [data, setData] = useState();
-  const indexOfLast = currentPage * postsPerPage;
-  const indexOfFirst = indexOfLast - postsPerPage;
-  const currentPosts = data?.slice(indexOfFirst, indexOfLast);
+  const [maxPage, setMaxPage] = useState(0);
+
+  // const indexOfLast = currentPage * postsPerPage;
+  // const indexOfFirst = indexOfLast - postsPerPage;
+  // const currentPosts = data?.slice(indexOfFirst, indexOfLast);
   const navigate = useNavigate();
   const keyword = [
     {
@@ -41,13 +43,18 @@ const ApplyList = ({ data }) => {
   ];
 
   useEffect(()  => {
-    getList().then((res) => {
+    getList({
+      page: currentPage,
+      per_page: postsPerPage
+    }).then((res) => {
       console.log(res)
+      setData(res.data.items);
+      setMaxPage(res.data.max_page);
     }).catch((e) => {
       console.log(e)
     })
-  }, []);
-  
+  }, [currentPage]);
+
 
   const setDateRange = (period) => {
     const start = new Date();
@@ -73,11 +80,18 @@ const ApplyList = ({ data }) => {
     } 
   }
 
-
   const searchKeyword = () => {
-    
-
   }
+
+  const nextViewDetail = (uuid, memberNo, quqteNo) => {
+    navigate(`/admin/detailView`, {
+      state: {
+        UUID: uuid,
+        QUOTE_NO: quqteNo
+      }
+    })
+  }
+
   return (
     <Wrap>
       <Title title='접수 현황' />
@@ -164,24 +178,22 @@ const ApplyList = ({ data }) => {
           </thead>
           <tbody>
             <>
-              {currentPosts.map((dt) => (
-                <tr onClick={() => navigate(`?id=${dt.id}`)}> 
-                  <td>{dt.number}</td>
-                  <td>{dt.name}</td>
-                  <td style={{ textAlign: 'start' }}>{dt.bizName}</td>
-                  <td>{dt.applyDate}</td>
-                  <td>{dt.bizNo}</td>
-                  <td>{dt.telNo}</td>
+              {data?.map((dt) => (
+                <tr onClick={() => nextViewDetail(dt.uuid, dt.MEMBER_NO, dt.QUOTE_NO)}> 
+                  <td>1</td>
+                  <td>{dt.IN101TR.PTYKORNM}</td>
+                  <td style={{ textAlign: 'start' }}>{dt.IN101TR.PTYBIZNM}</td>
+                  <td>{dt.IN101TR.INSERT_DATE?.substring(0, 10).replace(/-/g, '.')}</td>
+                  <td>{dt.IN101TR.BIZNO?.replace(/(\d{3})(\d{2})(\d{5})/, '$1-$2-$3')}</td>
+                  <td>{dt.IN101TR.TELNO?.replace(/[^0-9]/g, '').replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3")}</td>
                 </tr>
               ))}
             </>
           </tbody>      
         </Table>
         <Pagination
-          postPerPage={postsPerPage} 
-          totalPosts={data.length} 
+          totalPage={maxPage} 
           paginate={setCurrentPage}
-          nextPage={setCurrentPage}
         />
       </ListWrap>
     </Wrap>

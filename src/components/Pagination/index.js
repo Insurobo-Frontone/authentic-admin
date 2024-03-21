@@ -5,13 +5,11 @@ import next from '../../assets/icon/paginationNext.png';
 import prev from '../../assets/icon/paginationPrev.png';
 
 
-function Pagination({ postPerPage, totalPosts, paginate }) {
+function Pagination({ totalPage, paginate, nextPage, prevPage }) {
   const [active, setActive] = useState(1);
   const pageNumbers = [];
-  
 
-
-  for (let i = 1; i <= Math.ceil(totalPosts / postPerPage); i++) {
+  for (let i = 1; i <= totalPage; i++) {
     pageNumbers.push(i);
   }
 
@@ -19,10 +17,7 @@ function Pagination({ postPerPage, totalPosts, paginate }) {
     paginate(n);
     setActive(n);
   }
-  const nextPage = (n) => {
-    paginate(n);
-    setActive(n);
-  }
+
   return (
     <Nav>
       <ButtonUl>
@@ -31,6 +26,7 @@ function Pagination({ postPerPage, totalPosts, paginate }) {
             width='50px'
             title={<img src={prev} alt='이전' />}
             theme='light'
+            onClick={prevPage}
           />
         </li>
         {pageNumbers.map((number) => (
@@ -48,6 +44,7 @@ function Pagination({ postPerPage, totalPosts, paginate }) {
             width='50px'
             title={<img src={next} alt='다음'/>}
             theme='light'
+            onClick={nextPage}
           />
         </li>
       </ButtonUl>

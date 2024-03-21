@@ -8,7 +8,7 @@ export const ApplyListAPI = axios.create({
 });
 
 export const getList = async (params) => {
-  return await ApplyListAPI.get(`/windstorm/member/Member/getList?page=1&per_page=10`);
+  return await ApplyListAPI.get(`/windstorm/member/Member/getList?page=${params.page}&per_page=${params.per_page}`);
 };
 
 export const getDetail = async (params) => {
