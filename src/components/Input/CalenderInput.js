@@ -16,10 +16,12 @@ const CalendarInput = ({
   name, 
   placeholder,
   minDate,
-  maxDate
+  maxDate,
+  selected,
+  setSelectedDate
 }) => {
   registerLocale("ko")
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
   const ref = useRef(null);
   const _ = require("lodash");
   const years =  _.range(1990, getYear(new Date()) + 1, 1);
@@ -56,8 +58,11 @@ const CalendarInput = ({
             shouldCloseOnSelect={true}
             useWeekdaysShort={false}
             selected={field.value}
+            // onChange={(date) => {
+            //   selected ? setSelectedDate(date) : field.onChange(date);
+            // }}
             onChange={(date) => {
-              field.onChange(date);
+              setValue(name, date)
             }}
             placeholderText={placeholder}
             showIcon

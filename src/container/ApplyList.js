@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Title from "../components/Title";
-import SelectInput from "../components/Input/SelectInput";
+// import SelectInput from "../components/Input/SelectInput";
 import TextInput from "../components/Input/TextInput";
 import Button from "../components/Button";
 import CalendarInput from "../components/Input/CalenderInput";
@@ -18,29 +18,39 @@ const ApplyList = () => {
   const [data, setData] = useState();
   const [postsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [count, setCount] = useState(0);
   const [maxPage, setMaxPage] = useState(0);
-
-  // const indexOfLast = currentPage * postsPerPage;
-  // const indexOfFirst = indexOfLast - postsPerPage;
-  // const currentPosts = data?.slice(indexOfFirst, indexOfLast);
   const navigate = useNavigate();
-  const keyword = [
-    {
-      id: '1',
-      name: '가입자명',
-      value: 'PTYKORNM'
-    },
-    {
-      id: '2',
-      name: '상호명',
-      value: 'PTYBIZNM'
-    },
-    {
-      id: '3',
-      name: '연락처',
-      value: 'TELNO'
-    },
-  ];
+  // const keyword = [
+  //   {
+  //     id: '1',
+  //     name: '가입자명',
+  //     value: 'PTYKORNM'
+  //   },
+  //   {
+  //     id: '2',
+  //     name: '상호명',
+  //     value: 'PTYBIZNM'
+  //   },
+  //   {
+  //     id: '3',
+  //     name: '연락처',
+  //     value: 'TELNO'
+  //   },
+  // ];
+  function leftPad(value) {
+    if (value >= 10) {
+        return value;
+    }
+    return `0${value}`;
+  }
+
+  const toStringByFormatting = (date, delimiter = '-') => {
+    const year = date?.getFullYear();
+    const month = leftPad(date?.getMonth() + 1);
+    const day = leftPad(date?.getDate());
+    return [year, month, day].join(delimiter);
+  }
 
   useEffect(()  => {
     getList({
@@ -50,11 +60,11 @@ const ApplyList = () => {
       console.log(res)
       setData(res.data.items);
       setMaxPage(res.data.max_page);
+      setCount(res.data.total_count);
     }).catch((e) => {
       console.log(e)
     })
   }, [currentPage]);
-
 
   const setDateRange = (period) => {
     const start = new Date();
@@ -80,14 +90,27 @@ const ApplyList = () => {
     } 
   }
 
-  const searchKeyword = () => {
+  const searchKeyword = (search, start, end) => {
+    getList({
+      ...(search && {KEYWORD: search}),
+      ...(start && {INSERT_DATE_ST: toStringByFormatting(start)}),
+      ...(end && {INSERT_DATE_ED: toStringByFormatting(end)}),
+      page: currentPage,
+      per_page: postsPerPage
+    }).then((res) => {
+      setData(res.data.items)
+      setMaxPage(res.data.max_page);
+      setCount(res.data.total_count);
+      console.log(res)
+    }).catch((e) => {
+      console.log(e)
+    })
   }
 
-  const nextViewDetail = (uuid, memberNo, quqteNo) => {
+  const nextViewDetail = (uuid) => {
     navigate(`/admin/detailView`, {
       state: {
-        UUID: uuid,
-        QUOTE_NO: quqteNo
+        UUID: uuid
       }
     })
   }
@@ -99,7 +122,7 @@ const ApplyList = () => {
         <div>
           <p>키워드</p>
           <div>
-            <SelectInput 
+            {/* <SelectInput 
               name='keyword'
               placeholder='전체'
               width='182px'
@@ -109,12 +132,16 @@ const ApplyList = () => {
                   <option key={dt.id} value={dt.value}>{dt.name}</option>
                 ))}
               </>
-            </SelectInput>
-            <TextInput name='search' width='482px' />
+            </SelectInput> */}
+            <TextInput 
+              name='search'
+              width='680px'
+              onKeyUp={() => setValue('search', watch('search').replace(/[^0-9]/g, ""))}
+            />
             <Button 
               title='검색'
               width='67px'
-              onClick={() => searchKeyword()}
+              onClick={() => searchKeyword(watch('search'), watch('startDate'), watch('endDate'))}
             /> 
           </div>
         </div>
@@ -131,6 +158,7 @@ const ApplyList = () => {
               <CalendarInput
                 width='182px'
                 name='endDate'
+                maxDate={new Date()}
                 placeholder='선택'
               />
               <RangeButtonWrap>
@@ -164,7 +192,7 @@ const ApplyList = () => {
         </div>
       </SearchRange>
       <ListWrap>
-        <TotalCount>총<strong>3</strong> 건</TotalCount>
+        <TotalCount>총<strong>{count}</strong>건</TotalCount>
         <Table>
           <thead>
             <tr>
@@ -178,9 +206,9 @@ const ApplyList = () => {
           </thead>
           <tbody>
             <>
-              {data?.map((dt) => (
-                <tr onClick={() => nextViewDetail(dt.uuid, dt.MEMBER_NO, dt.QUOTE_NO)}> 
-                  <td>1</td>
+              {data?.map((dt, index) => (
+                <tr onClick={() => nextViewDetail(dt.uuid)}> 
+                  <td>{index + 1}</td>
                   <td>{dt.IN101TR.PTYKORNM}</td>
                   <td style={{ textAlign: 'start' }}>{dt.IN101TR.PTYBIZNM}</td>
                   <td>{dt.IN101TR.INSERT_DATE?.substring(0, 10).replace(/-/g, '.')}</td>

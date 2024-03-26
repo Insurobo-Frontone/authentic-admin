@@ -41,4 +41,10 @@ const Wrap = styled.table`
     font-size: 14px;
     padding: 0 24px;
   }
+  .primary_txt {
+    color: #5DA3FF;
+  }
+  .exception_txt {
+    color: #FF0000;
+  }
 `;

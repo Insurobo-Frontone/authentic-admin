@@ -8,9 +8,15 @@ export const ApplyListAPI = axios.create({
 });
 
 export const getList = async (params) => {
-  return await ApplyListAPI.get(`/windstorm/member/Member/getList?page=${params.page}&per_page=${params.per_page}`);
+  return await ApplyListAPI.get(`/windstorm/member/Member/getList`, { params });
 };
 
+export const getKeywordList = async (params) => {
+  return await ApplyListAPI.get(`/windstorm/member/Member/getList?KEYWORD=${params.KEYWORD}&${params.KEYWORD}=${params.KEYWORD_VALUE}&page=${params.page}&per_page=${params.per_page}`)
+}
+
 export const getDetail = async (params) => {
-  return await ApplyListAPI.get(`/windstorm/member/Member/getDetail?UUID=${params.UUID}&MEMBER_NO=${params.MEMBER_NO}&&QUOTE_NO=${params.QUOTE_NO}`);
+  return await ApplyListAPI.get(`/windstorm/member/Member/getDetail?UUID=${params.UUID}`);
 };
+
+

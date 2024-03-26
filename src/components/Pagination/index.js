@@ -27,6 +27,7 @@ function Pagination({ totalPage, paginate, nextPage, prevPage }) {
             title={<img src={prev} alt='이전' />}
             theme='light'
             onClick={prevPage}
+            disabled={paginate === 1}
           />
         </li>
         {pageNumbers.map((number) => (
@@ -45,6 +46,7 @@ function Pagination({ totalPage, paginate, nextPage, prevPage }) {
             title={<img src={next} alt='다음'/>}
             theme='light'
             onClick={nextPage}
+            disabled={paginate === pageNumbers.length}
           />
         </li>
       </ButtonUl>
